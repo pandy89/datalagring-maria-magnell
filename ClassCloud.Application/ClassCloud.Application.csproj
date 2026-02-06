@@ -6,4 +6,8 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\ClassCloud.Domain\ClassCloud.Domain.csproj" />
+  </ItemGroup>
+
 </Project>
