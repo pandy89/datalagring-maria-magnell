@@ -1,0 +1,6 @@
+<Solution>
+  <Project Path="ClassCloud.Application/ClassCloud.Application.csproj" />
+  <Project Path="ClassCloud.Domain/ClassCloud.Domain.csproj" />
+  <Project Path="ClassCloud.Infrastructure/ClassCloud.Infrastructure.csproj" />
+  <Project Path="ClassCloud.Presentation.API/ClassCloud.Presentation.API.csproj" />
+</Solution>
