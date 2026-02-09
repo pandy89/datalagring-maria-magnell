@@ -6,4 +6,5 @@ public class LocationEntity
     public string Name { get; set; } = null!;
     public DateTime CreatedAtUtc { get; set; }
     public DateTime UpdatedAtUtc { get; set; }
+    public Byte[] RowVersion { get; set; } = null!;
 }

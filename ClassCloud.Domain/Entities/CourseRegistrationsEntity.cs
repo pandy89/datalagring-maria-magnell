@@ -10,4 +10,6 @@ public class CourseRegistrationsEntity
     public int ParticipantId { get; set; }
     public int CourseSessionId { get; set; }
     public int CourseStatusId { get; set; }
+
+    public Byte[] RowVersion { get; set; } = null!;
 }
