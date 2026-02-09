@@ -4,4 +4,5 @@ public class CourseStatusEntity
 {
     public int Id { get; set; }
     public string StatusType { get; set; } = null!;
+    public Byte[] RowVersion { get; set; } = null!;
 }
