@@ -14,5 +14,5 @@ public class CourseSessionsEntity
     public int LocationId { get; set; }
     public int CourseId { get; set; }
 
-    public Byte[] RowVersion { get; set; } = null!;
+    public byte[] RowVersion { get; set; } = null!;
 }

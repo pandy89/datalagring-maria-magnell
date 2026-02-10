@@ -11,5 +11,5 @@ public class CourseRegistrationsEntity
     public int CourseSessionId { get; set; }
     public int CourseStatusId { get; set; }
 
-    public Byte[] RowVersion { get; set; } = null!;
+    public byte[] RowVersion { get; set; } = null!;
 }
