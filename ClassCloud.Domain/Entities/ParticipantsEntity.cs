@@ -10,5 +10,5 @@ public class ParticipantsEntity
     public DateTime CreatedAtUtc { get; set; }
     public DateTime UpdatedAtUtc { get; set; }
     public bool IsDeleted { get; set; }
-    public Byte[] RowVersion { get; set; } = null!;
+    public byte[] RowVersion { get; set; } = null!;
 }
