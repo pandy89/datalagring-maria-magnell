@@ -15,9 +15,22 @@ builder.Services.AddDbContext<ClassCloudDbContext>(options => options.UseSqlServ
 
 // Services
 builder.Services.AddScoped<CourseService>();
+builder.Services.AddScoped<CourseSessionService>();
 
 // Repos
 builder.Services.AddScoped<ICourseRepository, CourseRepository>();
+builder.Services.AddScoped<ICourseSessionRepository, CourseSessionRepository>();
+
+
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("All", policy =>
+    {
+        policy.AllowAnyHeader();
+        policy.AllowAnyMethod();
+        policy.AllowAnyOrigin();
+    });
+});
 
 builder.Services.AddOpenApi();
 
@@ -50,6 +63,8 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 
 app.UseExceptionHandler();
+
+app.UseCors("All");
 
 #region Courses
 
@@ -103,5 +118,19 @@ courses.MapDelete("/{courseCode}", async (string courseCode, CourseService cours
 });
 #endregion
 
+#region CourseSessions
+var courseSessions = app.MapGroup("/api/course-sessions").WithTags("Course Sessions");
+
+courseSessions.MapGet("/{id}", async (int id, CourseSessionService service, CancellationToken ct) =>
+{
+    var result = await service.GetOneCourseSessionAsync(id, ct);
+    return result.Match(
+        cs => Results.Ok(cs),
+        errors => errors.ToProblemDetails()
+    );
+});
+
+
+#endregion
 
 app.Run();

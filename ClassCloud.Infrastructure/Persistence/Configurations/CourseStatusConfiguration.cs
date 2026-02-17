@@ -8,6 +8,7 @@ public class CourseStatusConfiguration : IEntityTypeConfiguration<CourseStatusEn
 {
     public void Configure(EntityTypeBuilder<CourseStatusEntity> builder)
     {
+        // Primary key
         builder.HasKey(e => e.Id )
             .HasName("PK_CourseStatus_Id");
 
