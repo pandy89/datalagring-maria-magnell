@@ -4,10 +4,11 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace ClassCloud.Infrastructure.Persistence.Configurations;
 
-public class ParticipantsConfiguration : IEntityTypeConfiguration<ParticipantsEntity>
+public class ParticipantConfiguration : IEntityTypeConfiguration<ParticipantEntity>
 {
-    public void Configure(EntityTypeBuilder<ParticipantsEntity> builder)
+    public void Configure(EntityTypeBuilder<ParticipantEntity> builder)
     {
+        // Primary key
         builder.HasKey(e => e.Id)
             .HasName("PK_Participants_Id");
 
@@ -30,12 +31,12 @@ public class ParticipantsConfiguration : IEntityTypeConfiguration<ParticipantsEn
 
         builder.Property(e => e.CreatedAtUtc)
             .HasColumnType("datetime2(0)")
-            .HasDefaultValue("(SYSUTCDATETIME())" , "DF_Participant_CreatedAtUtc")
+            .HasDefaultValue("(SYSUTCDATETIME())", "DF_Participants_CreatedAtUtc")
             .ValueGeneratedOnAdd();
 
         builder.Property(e => e.UpdatedAtUtc)
             .HasColumnType("datetime2(0)")
-            .HasDefaultValue("(SYSUTCDATETIME())", "DF_Participant_UpdatedAtUtc")
+            .HasDefaultValue("(SYSUTCDATETIME())", "DF_Participants_UpdatedAtUtc")
             .ValueGeneratedOnAddOrUpdate();
 
         builder.Property(e => e.IsDeleted)
@@ -45,8 +46,9 @@ public class ParticipantsConfiguration : IEntityTypeConfiguration<ParticipantsEn
             .IsRowVersion();
 
 
-        builder.HasIndex(e => e.Email, "UQ_Participant_Email").IsUnique();
+        builder.HasIndex(e => e.Email, "UQ_Participants_Email").IsUnique();
 
-        builder.ToTable(tb => tb.HasCheckConstraint("UQ_Participant_Email_NotEmpty", "LTRIM(RTRIM([Email])) <> ''"));
+
+        builder.ToTable(tb => tb.HasCheckConstraint("UQ_Participants_Email_NotEmpty", "LTRIM(RTRIM([Email])) <> ''"));
     }
 }

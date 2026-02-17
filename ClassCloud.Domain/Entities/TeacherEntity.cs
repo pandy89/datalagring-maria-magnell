@@ -10,4 +10,6 @@ public class TeacherEntity
     public DateTime UpdatedAtUtc { get; set; }
     public bool IsDeleted { get; set; }
     public byte[] RowVersion { get; set; } = null!;
+
+    public ICollection<TeacherCourseSessionEntity> TeacherCourseSessions { get; set; } = [];
 }

@@ -8,8 +8,9 @@ public class TeacherConfiguration : IEntityTypeConfiguration<TeacherEntity>
 {
     public void Configure(EntityTypeBuilder<TeacherEntity> builder)
     {
+        // Primary key
         builder.HasKey(e => e.Id)
-            .HasName("PK_Teacher_Id");
+            .HasName("PK_Teachers_Id");
 
         builder.Property(e => e.FirstName)
             .IsRequired()
@@ -25,11 +26,11 @@ public class TeacherConfiguration : IEntityTypeConfiguration<TeacherEntity>
 
         builder.Property(e => e.CreatedAtUtc)
             .HasColumnType("datetime2(0)")
-            .HasDefaultValue("(SYSUTCDATETIME())", "DF_Teacher_CreatedAtUtc");
+            .HasDefaultValue("(SYSUTCDATETIME())", "DF_Teachers_CreatedAtUtc");
 
         builder.Property(e => e.UpdatedAtUtc)
             .HasColumnType("datetime2(0)")
-            .HasDefaultValue("(SYSUTCDATETIME())", "DF_Teacher_UpdatedAtUtc");
+            .HasDefaultValue("(SYSUTCDATETIME())", "DF_Teachers_UpdatedAtUtc");
 
         builder.Property(e => e.IsDeleted)
             .HasDefaultValue(false);

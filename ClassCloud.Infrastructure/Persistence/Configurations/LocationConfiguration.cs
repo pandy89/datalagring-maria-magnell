@@ -8,8 +8,9 @@ public class LocationConfiguration : IEntityTypeConfiguration<LocationEntity>
 {
     public void Configure(EntityTypeBuilder<LocationEntity> builder)
     {
+        // Primary key
         builder.HasKey(e => e.Id)
-            .HasName("PK_Location_Id");
+            .HasName("PK_Locations_Id");
 
         builder.Property(e => e.Name)
             .IsRequired()
@@ -17,11 +18,11 @@ public class LocationConfiguration : IEntityTypeConfiguration<LocationEntity>
 
         builder.Property(e => e.CreatedAtUtc)
             .HasColumnType("datetime2(0)")
-            .HasDefaultValue("(SYSUTCDATETIME())", "DF_Location_CreatedAtUtc");
+            .HasDefaultValue("(SYSUTCDATETIME())", "DF_Locations_CreatedAtUtc");
 
         builder.Property(e => e.UpdatedAtUtc)
             .HasColumnType("datetime2(0)")
-            .HasDefaultValue("(SYSUTCDATETIME())", "DF_Location_UpdatedAtUtc");
+            .HasDefaultValue("(SYSUTCDATETIME())", "DF_Locations_UpdatedAtUtc");
 
         builder.Property(e => e.RowVersion)
             .IsRowVersion();

@@ -1,6 +1,6 @@
 ﻿namespace ClassCloud.Domain.Entities;
 
-public class ParticipantsEntity
+public class ParticipantEntity
 {
     public int Id { get; set; }
     public string Email { get; set; } = null!;
@@ -11,4 +11,6 @@ public class ParticipantsEntity
     public DateTime UpdatedAtUtc { get; set; }
     public bool IsDeleted { get; set; }
     public byte[] RowVersion { get; set; } = null!;
+
+    public ICollection<CourseRegistrationEntity> CourseRegistrations { get; set; } = [];
 }
