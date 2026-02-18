@@ -9,6 +9,8 @@ public class TeacherCourseSessionConfiguration : IEntityTypeConfiguration<Teache
     public void Configure(EntityTypeBuilder<TeacherCourseSessionEntity> builder)
     {
         // Primary key
+        builder.HasKey(e => e.Id);
+
         builder.HasKey(x => new { x.TeacherId, x.CourseSessionId })
             .HasName("PK_TeacherCourseSessions_Id"); ;
 

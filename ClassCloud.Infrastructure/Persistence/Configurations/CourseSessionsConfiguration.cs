@@ -14,11 +14,14 @@ public class CourseSessionsConfiguration : IEntityTypeConfiguration<CourseSessio
 
         builder.Property(e => e.StartDate)
            .HasColumnType("datetime2(0)")
-           .HasDefaultValue("(SYSUTCDATETIME())", "DF_CourseSessions_StartDate");
+           .HasDefaultValueSql("(SYSUTCDATETIME())", "DF_CourseSessions_StartDate")
+           .ValueGeneratedOnAdd(); 
+            
 
         builder.Property(e => e.EndDate)
             .HasColumnType("datetime2(0)")
-            .HasDefaultValue("(SYSUTCDATETIME())", "DF_CourseSessions_EndDate");
+            .HasDefaultValueSql("(SYSUTCDATETIME())", "DF_CourseSessions_EndDate")
+            .ValueGeneratedOnAdd(); 
 
         builder.ToTable("CourseSessions", t =>
         {
@@ -30,11 +33,13 @@ public class CourseSessionsConfiguration : IEntityTypeConfiguration<CourseSessio
 
         builder.Property(e => e.CreatedAtUtc)
             .HasColumnType("datetime2(0)")
-            .HasDefaultValue("(SYSUTCDATETIME())", "DF_CourseSessions_CreatedAtUtc");
+            .HasDefaultValueSql("(SYSUTCDATETIME())", "DF_CourseSessions_CreatedAtUtc")
+            .ValueGeneratedOnAdd(); 
 
         builder.Property(e => e.UpdatedAtUtc)
             .HasColumnType("datetime2(0)")
-            .HasDefaultValue("(SYSUTCDATETIME())", "DF_CourseSessions_UpdatedAtUtc");
+            .HasDefaultValueSql("(SYSUTCDATETIME())", "DF_CourseSessions_UpdatedAtUtc")
+            .ValueGeneratedOnAdd();
 
         builder.Property(e => e.IsDeleted)
             .HasDefaultValue(false);
@@ -46,7 +51,7 @@ public class CourseSessionsConfiguration : IEntityTypeConfiguration<CourseSessio
             .IsRowVersion();
 
 
-        // Relation
+        // Relationship
         builder.HasOne(cs => cs.Course)
             .WithMany(c => c.CourseSessions)
             .HasForeignKey(cs => cs.CourseId)
