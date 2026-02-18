@@ -1,25 +1,28 @@
 using ClassCloud.Application.Abstractions.Persistence;
+using ClassCloud.Application.Dtos.Course;
+using ClassCloud.Application.Dtos.Participants;
 using ClassCloud.Application.Services;
 using ClassCloud.Infrastructure;
 using ClassCloud.Infrastructure.Persistence.Repositories;
-using ClassCloud.Presentation.API.Middlewares;
 using ClassCloud.Presentation.API.Extensions;
-using Microsoft.EntityFrameworkCore;
+using ClassCloud.Presentation.API.Middlewares;
 using EntityFramework.Exceptions.SqlServer;
-using ClassCloud.Application.Dtos.Course;
+using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddDbContext<ClassCloudDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("LocalDdFile")).UseExceptionProcessor());
+builder.Services.AddDbContext<ClassCloudDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("LocalDbFile")).UseExceptionProcessor());
 
 
 // Services
 builder.Services.AddScoped<CourseService>();
 builder.Services.AddScoped<CourseSessionService>();
+builder.Services.AddScoped<ParticipantService>();
 
 // Repos
 builder.Services.AddScoped<ICourseRepository, CourseRepository>();
 builder.Services.AddScoped<ICourseSessionRepository, CourseSessionRepository>();
+builder.Services.AddScoped<IParticipantRepository, ParticipantRepository>();
 
 
 builder.Services.AddCors(options =>
@@ -68,7 +71,7 @@ app.UseCors("All");
 
 #region Courses
 
-var courses = app.MapGroup("/api/courses");
+var courses = app.MapGroup("/api/courses").WithTags("Courses");
 
 // Create course
 courses.MapPost("/", async (CreateCourseDto dto, CourseService courseService, CancellationToken ct) =>
@@ -129,6 +132,64 @@ courseSessions.MapGet("/{id}", async (int id, CourseSessionService service, Canc
         errors => errors.ToProblemDetails()
     );
 });
+
+
+#endregion
+
+#region Participants
+var participant = app.MapGroup("/api/participant").WithTags("Participant");
+
+// Create participant
+participant.MapPost("/", async (CreateParticipantDto dto, ParticipantService participantService, CancellationToken ct) =>
+{
+    var result = await participantService.CreateParticipantAsync(dto, ct);
+    return result.Match(
+        participant => Results.Created($"/api/participant/{participant.Email}", participant),
+        errors => errors.ToProblemDetails()
+    );
+});
+
+// Get one participant
+participant.MapGet("/{email}", async (string email, ParticipantService participantService, CancellationToken ct) =>
+{
+    var result = await participantService.GetOneParticipantAsync(email, ct);
+    return result.Match(
+        participant => Results.Ok(participant),
+        errors => errors.ToProblemDetails()
+        );
+});
+
+// Get all participant order by email
+participant.MapGet("/", async (ParticipantService participantService, CancellationToken ct) =>
+{
+    var result = await participantService.GetAllParticipantsAsync(ct);
+    return Results.Ok(result);
+});
+
+// Update course
+participant.MapPut("/{email}", async (string email, UpdateParticipantDto dto, ParticipantService participantService, CancellationToken ct) =>
+{
+    var result = await participantService.UpdateParticipantAsync(email, dto, ct);
+    return result.Match(
+        participant => Results.Ok(participant),
+        errors => errors.ToProblemDetails()
+        );
+});
+
+
+// Delete participant with email
+participant.MapDelete("/{email}", async (string Email, ParticipantService participantService, CancellationToken ct) =>
+{
+    var result = await participantService.DeleteParticipantAsync(Email, ct);
+    return result.Match(
+        _ => Results.NoContent(),
+        errors => errors.ToProblemDetails()
+    );
+});
+
+#endregion
+
+#region Teachers
 
 
 #endregion

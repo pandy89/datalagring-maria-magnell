@@ -26,11 +26,13 @@ public class CourseConfigurations : IEntityTypeConfiguration<CourseEntity>
 
         builder.Property(e => e.CreatedAtUtc)
             .HasColumnType("datetime2(0)")
-            .HasDefaultValue("(SYSUTCDATETIME())", "DF_Courses_CreatedAtUtc");
+            .HasDefaultValueSql("(SYSUTCDATETIME())", "DF_Courses_CreatedAtUtc")
+            .ValueGeneratedOnAdd();
 
         builder.Property(e => e.UpdatedAtUtc)
             .HasColumnType("datetime2(0)")
-            .HasDefaultValue("(SYSUTCDATETIME())", "DF_Courses_UpdatedAtUtc");
+            .HasDefaultValueSql("(SYSUTCDATETIME())", "DF_Courses_UpdatedAtUtc")
+            .ValueGeneratedOnAdd();
 
         builder.Property(e => e.IsDeleted)
             .HasDefaultValue(false);

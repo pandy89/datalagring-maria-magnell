@@ -2,15 +2,16 @@
 using ClassCloud.Application.Common.Errors;
 using ClassCloud.Application.Dtos.CourseSessions;
 using ClassCloud.Application.Mappers;
+using ClassCloud.Domain.Entities;
 
 namespace ClassCloud.Application.Services;
 
-public class CourseSessionService(ICourseSessionRepository repository)
+public class CourseSessionService(ICourseSessionRepository coursesessionRepository)
 {
-    // Get one selected course by Id.
+    // Get one selected coursesession by Id.
     public async Task<ErrorOr<CourseSessionDto>> GetOneCourseSessionAsync(int id, CancellationToken ct = default)
     {
-        var courseSession = await repository.GetOneAsync(
+        var courseSession = await coursesessionRepository.GetOneAsync(
             where: cs => cs.Id == id,
             select: CourseSessionMapper.ToCourseSessionDtoExpr,
             ct: ct

@@ -31,12 +31,12 @@ public class ParticipantConfiguration : IEntityTypeConfiguration<ParticipantEnti
 
         builder.Property(e => e.CreatedAtUtc)
             .HasColumnType("datetime2(0)")
-            .HasDefaultValue("(SYSUTCDATETIME())", "DF_Participants_CreatedAtUtc")
+            .HasDefaultValueSql("(SYSUTCDATETIME())", "DF_Participants_CreatedAtUtc")
             .ValueGeneratedOnAdd();
 
         builder.Property(e => e.UpdatedAtUtc)
             .HasColumnType("datetime2(0)")
-            .HasDefaultValue("(SYSUTCDATETIME())", "DF_Participants_UpdatedAtUtc")
+            .HasDefaultValueSql("(SYSUTCDATETIME())", "DF_Participants_UpdatedAtUtc")
             .ValueGeneratedOnAddOrUpdate();
 
         builder.Property(e => e.IsDeleted)
@@ -47,7 +47,6 @@ public class ParticipantConfiguration : IEntityTypeConfiguration<ParticipantEnti
 
 
         builder.HasIndex(e => e.Email, "UQ_Participants_Email").IsUnique();
-
 
         builder.ToTable(tb => tb.HasCheckConstraint("UQ_Participants_Email_NotEmpty", "LTRIM(RTRIM([Email])) <> ''"));
     }

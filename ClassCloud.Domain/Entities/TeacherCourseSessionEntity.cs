@@ -2,6 +2,7 @@
 
 public class TeacherCourseSessionEntity
 {
+    public int Id { get; set; }
     public int CourseSessionId { get; set; } // FK
 
     public CourseSessionEntity CourseSession { get; set; } = null!;

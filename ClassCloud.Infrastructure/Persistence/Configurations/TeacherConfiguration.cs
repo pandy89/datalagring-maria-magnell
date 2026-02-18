@@ -24,18 +24,28 @@ public class TeacherConfiguration : IEntityTypeConfiguration<TeacherEntity>
             .IsRequired()
             .HasMaxLength(50);
 
+        builder.Property(e => e.Email)
+            .IsRequired()
+            .HasMaxLength(255);
+
         builder.Property(e => e.CreatedAtUtc)
             .HasColumnType("datetime2(0)")
-            .HasDefaultValue("(SYSUTCDATETIME())", "DF_Teachers_CreatedAtUtc");
+            .HasDefaultValueSql("(SYSUTCDATETIME())", "DF_Teachers_CreatedAtUtc")
+            .ValueGeneratedOnAdd();
 
         builder.Property(e => e.UpdatedAtUtc)
             .HasColumnType("datetime2(0)")
-            .HasDefaultValue("(SYSUTCDATETIME())", "DF_Teachers_UpdatedAtUtc");
+            .HasDefaultValueSql("(SYSUTCDATETIME())", "DF_Teachers_UpdatedAtUtc")
+            .ValueGeneratedOnAdd();
 
         builder.Property(e => e.IsDeleted)
             .HasDefaultValue(false);
 
         builder.Property(e => e.RowVersion)
             .IsRowVersion();
+
+        builder.HasIndex(e => e.Email, "UQ_Teachers_Email").IsUnique();
+
+        builder.ToTable(tb => tb.HasCheckConstraint("UQ_Teachers_Email_NotEmpty", "LTRIM(RTRIM([Email])) <> ''"));
     }
 }

@@ -14,17 +14,19 @@ public class CourseRegistrationConfiguration : IEntityTypeConfiguration<CourseRe
 
         builder.Property(e => e.RegistrationDate)
             .HasColumnType("datetime2(0)")
-            .HasDefaultValue("(SYSUTCDATETIME())", "DF_CourseRegistrations_RegistrationDate");
+            .HasDefaultValueSql("(SYSUTCDATETIME())", "DF_CourseRegistrations_RegistrationDate")
+            .ValueGeneratedOnAdd();
 
         builder.Property(e => e.UpdatedAtUtc)
             .HasColumnType("datetime2(0)")
-            .HasDefaultValue("(SYSUTCDATETIME())", "DF_CourseRegistrations_UpdatedAtUtc");
+            .HasDefaultValueSql("(SYSUTCDATETIME())", "DF_CourseRegistrations_UpdatedAtUtc")
+            .ValueGeneratedOnAdd(); 
 
         builder.Property(e => e.IsDeleted)
             .IsRequired()
             .HasDefaultValue(false);
 
-        //Relation
+        //Relationship
         builder.HasOne(cr => cr.Participant)
             .WithMany(cs => cs.CourseRegistrations)
             .HasForeignKey(cr => cr.ParticipantId)
