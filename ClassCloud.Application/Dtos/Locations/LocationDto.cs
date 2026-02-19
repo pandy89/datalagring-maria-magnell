@@ -2,5 +2,7 @@
 
 public record LocationDto
 (
-    string Name
+    string Name,
+    DateTime CreatedAtUtc,
+    DateTime UpdatedAtUtc
 );

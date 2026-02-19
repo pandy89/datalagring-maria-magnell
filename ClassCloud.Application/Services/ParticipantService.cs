@@ -1,7 +1,6 @@
 ﻿using ClassCloud.Application.Abstractions.Persistence;
 using ClassCloud.Application.Common.Errors;
 using ClassCloud.Application.Common.Results;
-using ClassCloud.Application.Dtos.Course;
 using ClassCloud.Application.Dtos.Participants;
 using ClassCloud.Application.Mappers;
 using ClassCloud.Domain.Entities;
@@ -36,18 +35,18 @@ public class ParticipantService(IParticipantRepository participantRepository)
     public async Task<IReadOnlyList<ParticipantDto>> GetAllParticipantsAsync(CancellationToken ct = default)
     {
         return await _participantRepository.GetAllAsync(
-            select: p => new ParticipantDto(p.Email, p.FirstName, p.LastName, p.PhoneNumber, p.CreatedAtUtc, p.UpdatedAtUtc, p.IsDeleted, p.RowVersion),
+            select: p => new ParticipantDto(p.Email, p.FirstName, p.LastName, p.PhoneNumber),
             orderBy: o => o.OrderByDescending(x => x.Email),
             ct: ct
             );
     }
 
     // Update participant
-    public async Task<ErrorOr<ParticipantDto>> UpdateParticipantAsync(string Email, UpdateParticipantDto dto, CancellationToken ct = default)
+    public async Task<ErrorOr<ParticipantDto>> UpdateParticipantAsync(string email, UpdateParticipantDto dto, CancellationToken ct = default)
     {
-        var participant = await _participantRepository.GetOneAsync(x => x.Email == Email, ct);
+        var participant = await _participantRepository.GetOneAsync(x => x.Email == email, ct);
         if (participant is null)
-            return Error.NotFound("Participant.NotFound", $"Participant with '{Email}' was not found.");
+            return Error.NotFound("Participant.NotFound", $"Participant with '{email}' was not found.");
 
         if (!participant.RowVersion.SequenceEqual(dto.RowVersion))
             return Error.Conflict("Participant.Conflict", "Updated by another user. Please try again.");

@@ -11,12 +11,12 @@ public class CreateCourseDto
 
     [Required]
     [MinLength(1)]
-    [MaxLength(50)]
+    [MaxLength(100)]
     public string CourseName { get; set; } = null!;
 
     [Required]
     [MinLength(1)]
-    [MaxLength(200)]
+    [MaxLength(1000)]
     public string CourseDescription { get; set; } = null!;
 
 }

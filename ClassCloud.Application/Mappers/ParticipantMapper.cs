@@ -1,5 +1,4 @@
-﻿using ClassCloud.Application.Dtos.Course;
-using ClassCloud.Application.Dtos.Participants;
+﻿using ClassCloud.Application.Dtos.Participants;
 using ClassCloud.Domain.Entities;
 
 namespace ClassCloud.Application.Mappers;
@@ -11,10 +10,6 @@ public class ParticipantMapper
         entity.Email,
         entity.FirstName,
         entity.LastName,
-        entity.PhoneNumber,
-        entity.CreatedAtUtc,
-        entity.UpdatedAtUtc,
-        entity.IsDeleted,
-        entity.RowVersion
+        entity.PhoneNumber
     );
 }
