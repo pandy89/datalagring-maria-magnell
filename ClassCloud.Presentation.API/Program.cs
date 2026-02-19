@@ -1,9 +1,9 @@
 using ClassCloud.Application.Abstractions.Persistence;
 using ClassCloud.Application.Dtos.Course;
-using ClassCloud.Application.Dtos.CourseSessions;
 using ClassCloud.Application.Dtos.Locations;
 using ClassCloud.Application.Dtos.Participants;
 using ClassCloud.Application.Dtos.Teachers;
+using ClassCloud.Application.Dtos.CourseSessions;
 using ClassCloud.Application.Services;
 using ClassCloud.Infrastructure;
 using ClassCloud.Infrastructure.Persistence.Repositories;
@@ -23,6 +23,7 @@ builder.Services.AddScoped<CourseSessionService>();
 builder.Services.AddScoped<ParticipantService>();
 builder.Services.AddScoped<TeacherService>();
 builder.Services.AddScoped<LocationService>();
+
 
 // Repos
 builder.Services.AddScoped<ICourseRepository, CourseRepository>();
@@ -129,18 +130,19 @@ courses.MapDelete("/{courseCode}", async (string courseCode, CourseService cours
 #endregion
 
 #region CourseSessions
+
 var courseSessions = app.MapGroup("/api/course-sessions").WithTags("Course Sessions");
 
 // Create courseSession
 
-//courseSessions.MapPost("/", async (CreateCourseSessionDto dto, CourseSessionService courseSessionService, CancellationToken ct) =>
-//{
-//    var result = await courseSessionService.CreateCourseSessionAsync(dto, ct);
-//    return result.Match(
-//        coursesession => Results.Created($"/api/coursesession/{coursesession.StartDate}", coursesession),
-//        errors => errors.ToProblemDetails()
-//    );
-//});
+courseSessions.MapPost("/", async (CreateCourseSessionDto dto, CourseSessionService courseSessionService, CancellationToken ct) =>
+{
+    var result = await courseSessionService.CreateCourseSessionAsync(dto, ct);
+    return result.Match(
+        coursesession => Results.Created($"/api/coursesession/{coursesession.StartDate}", coursesession),
+        errors => errors.ToProblemDetails()
+    );
+});
 
 
 courseSessions.MapGet("/{id}", async (int id, CourseSessionService service, CancellationToken ct) =>
@@ -260,10 +262,10 @@ teacher.MapDelete("/{email}", async (string Email, TeacherService teacherService
 #endregion
 
 #region Location
-var location = app.MapGroup("/api/location").WithTags("Locations");
+var locations = app.MapGroup("/api/location").WithTags("Locations");
 
 // Create location
-location.MapPost("/", async (CreateLocationDto dto, LocationService locationService, CancellationToken ct) =>
+locations.MapPost("/", async (CreateLocationDto dto, LocationService locationService, CancellationToken ct) =>
 {
     var result = await locationService.CreateLocationAsync(dto, ct);
     return result.Match(
@@ -273,7 +275,7 @@ location.MapPost("/", async (CreateLocationDto dto, LocationService locationServ
 });
 
 // Get one location
-location.MapGet("/{name}", async (string name, LocationService locationService, CancellationToken ct) =>
+locations.MapGet("/{name}", async (string name, LocationService locationService, CancellationToken ct) =>
 {
     var result = await locationService.GetOneLocationAsync(name, ct);
     return result.Match(
@@ -283,14 +285,14 @@ location.MapGet("/{name}", async (string name, LocationService locationService, 
 });
 
 // Get all locations order by name
-location.MapGet("/", async (LocationService locationService, CancellationToken ct) =>
+locations.MapGet("/", async (LocationService locationService, CancellationToken ct) =>
 {
     var result = await locationService.GetAllLocationsAsync(ct);
     return Results.Ok(result);
 });
 
 // Update location
-location.MapPut("/{name}", async (string name, UpdateLocationDto dto, LocationService locationService, CancellationToken ct) =>
+locations.MapPut("/{name}", async (string name, UpdateLocationDto dto, LocationService locationService, CancellationToken ct) =>
 {
     var result = await locationService.UpdateLocationAsync(name, dto, ct);
     return result.Match(
@@ -300,7 +302,7 @@ location.MapPut("/{name}", async (string name, UpdateLocationDto dto, LocationSe
 });
 
 // Delete location with name
-location.MapDelete("/{name}", async (string name, LocationService locationService, CancellationToken ct) =>
+locations.MapDelete("/{name}", async (string name, LocationService locationService, CancellationToken ct) =>
 {
     var result = await locationService.DeleteLocationAsync(name, ct);
     return result.Match(
