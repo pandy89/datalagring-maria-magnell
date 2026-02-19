@@ -11,4 +11,5 @@ public class CourseSessionRepository(ClassCloudDbContext context) : BaseReposito
     {
         return await _context.CourseSessions.Include(x => x.Course).Include(x => x.Location).FirstOrDefaultAsync(where, ct);
     }
+
 }

@@ -44,18 +44,18 @@ public class CourseService(ICourseRepository courseRepository)
     // Update
     public async Task<ErrorOr<CourseDto>> UpdateCourseAsync(string courseCode, UpdateCourseDto dto, CancellationToken ct = default)
     {
-        var course = await _courseRepository.GetOneAsync(x => x.CourseCode == courseCode, ct);       
+        var course = await _courseRepository.GetOneAsync(x => x.CourseCode == courseCode, ct);
         if (course is null)
-            return Error.NotFound("Course.NotFound", $"Course with '{courseCode}' was not found.");
-        
+            return Error.NotFound("Courses.NotFound", $"Course with '{courseCode}' was not found.");
+
         if (!course.RowVersion.SequenceEqual(dto.RowVersion))
-            return Error.Conflict("Course.Conflict", "Updated by another user. Please try again.");
+            return Error.Conflict("Courses.Conflict", "Updated by another user. Try again.");
 
         course.CourseName = dto.CourseName;
         course.CourseDescription = dto.CourseDescription;
         course.UpdatedAtUtc = DateTime.UtcNow;
 
-        await _courseRepository.SaveChangesAsync( ct );
+        await _courseRepository.SaveChangesAsync(ct);
         return CourseMapper.ToCourseDto(course);
     }
 
