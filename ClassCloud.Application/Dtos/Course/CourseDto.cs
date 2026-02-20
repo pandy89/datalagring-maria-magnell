@@ -2,6 +2,7 @@
 
 public record CourseDto
 (
+    int id,
     string CourseCode,
     string CourseName,
     string CourseDescription,

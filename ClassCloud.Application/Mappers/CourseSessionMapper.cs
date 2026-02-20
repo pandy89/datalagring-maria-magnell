@@ -15,8 +15,11 @@ public class CourseSessionMapper
             cs.MaxParticipants,
             cs.CreatedAtUtc,
             cs.UpdatedAtUtc,
-            cs.RowVersion,
+            cs.IsDeleted,
+            cs.IsCanceled,
+            
             new CourseDto(
+                cs.Course.Id,
                 cs.Course.CourseCode,
                 cs.Course.CourseName,
                 cs.Course.CourseDescription,
@@ -30,7 +33,8 @@ public class CourseSessionMapper
                 cs.Location.CreatedAtUtc,
                 cs.Location.UpdatedAtUtc,
                 cs.Location.RowVersion
-            )
+            ),
+            cs.RowVersion
         );
 
     public static CourseSessionDto ToCourseSessionDto(CourseSessionEntity entity) => new
@@ -40,9 +44,11 @@ public class CourseSessionMapper
         entity.MaxParticipants,
         entity.CreatedAtUtc,
         entity.UpdatedAtUtc,
-        entity.RowVersion,
+        entity.IsDeleted,
+        entity.IsCanceled,        
         new CourseDto
         (
+            entity.Course.Id,
             entity.Course.CourseCode,
             entity.Course.CourseName,
             entity.Course.CourseDescription,
@@ -52,10 +58,11 @@ public class CourseSessionMapper
             entity.Course.RowVersion
         ),
         new LocationDto(
-            entity.Location.Name,    
+            entity.Location.Name,
             entity.Location.CreatedAtUtc,
             entity.Location.UpdatedAtUtc,
             entity.Location.RowVersion
-            )
+            ),
+        entity.RowVersion
     );
 }

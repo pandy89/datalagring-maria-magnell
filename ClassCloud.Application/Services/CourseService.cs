@@ -35,7 +35,7 @@ public class CourseService(ICourseRepository courseRepository)
     public async Task<IReadOnlyList<CourseDto>> GetAllCoursesAsync (CancellationToken ct = default)
     {
         return await _courseRepository.GetAllAsync(
-            select: c => new CourseDto (c.CourseCode, c.CourseName, c.CourseDescription, c.CreatedAtUtc, c.UpdatedAtUtc, c.IsDeleted, c.RowVersion),            
+            select: c => new CourseDto (c.Id, c.CourseCode, c.CourseName, c.CourseDescription, c.CreatedAtUtc, c.UpdatedAtUtc, c.IsDeleted, c.RowVersion),            
             orderBy: o => o.OrderByDescending(x => x.CreatedAtUtc),            
             ct: ct
             );

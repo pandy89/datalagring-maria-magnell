@@ -25,9 +25,9 @@ public class BaseRepositoy<TEntity> : IBaseRepository<TEntity> where TEntity : c
     }
 
     // Checks if there are any info in the table
-    public virtual async Task<bool> ExistsAsync(Expression<Func<TEntity, bool>> findBy)
+    public virtual async Task<bool> ExistsAsync(Expression<Func<TEntity, bool>> findBy, CancellationToken ct = default)
     {
-        return await _table.AnyAsync(findBy);
+        return await _table.AnyAsync(findBy, ct);
     }
 
     // Fetch first row in table
