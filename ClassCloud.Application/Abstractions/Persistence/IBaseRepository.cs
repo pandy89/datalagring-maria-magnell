@@ -8,7 +8,7 @@ public interface IBaseRepository<TEntity> where TEntity : class
     Task<TEntity> CreateAsync(TEntity entity, CancellationToken ct = default);
 
     // Exisits
-    Task<bool> ExistsAsync(Expression<Func<TEntity, bool>> findBy);
+    Task<bool> ExistsAsync(Expression<Func<TEntity, bool>> findBy, CancellationToken ct = default);
 
     // Get one
     Task<TEntity?> GetOneAsync(Expression<Func<TEntity, bool>> where, CancellationToken ct = default);

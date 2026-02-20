@@ -7,6 +7,7 @@ public class CourseMapper
 {
     public static CourseDto ToCourseDto(CourseEntity entity) => new
     (
+        entity.Id,
         entity.CourseCode,
         entity.CourseName,
         entity.CourseDescription,
