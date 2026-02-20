@@ -9,6 +9,7 @@ public class LocationMapper
     (
         entity.Name,
         entity.CreatedAtUtc,
-        entity.UpdatedAtUtc
+        entity.UpdatedAtUtc,
+        entity.RowVersion
     );
 }

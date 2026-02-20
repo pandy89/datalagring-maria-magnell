@@ -12,7 +12,9 @@ public sealed record CreateCourseSessionDto
     DateTime CreatedAt,
     DateTime UpdatedAt,
     CourseDto Course,
-    LocationDto Location
+    LocationDto Location,
+    byte[] RowVersion
+
 );
     
 

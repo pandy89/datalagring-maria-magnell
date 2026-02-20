@@ -4,5 +4,6 @@ public record LocationDto
 (
     string Name,
     DateTime CreatedAtUtc,
-    DateTime UpdatedAtUtc
+    DateTime UpdatedAtUtc,
+    byte[] RowVersion
 );

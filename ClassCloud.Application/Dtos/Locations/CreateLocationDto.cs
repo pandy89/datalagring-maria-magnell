@@ -8,4 +8,6 @@ public class CreateLocationDto
     [MinLength(1)]
     [MaxLength(100)]
     public string Name { get; set; } = null!;
+
+
 }

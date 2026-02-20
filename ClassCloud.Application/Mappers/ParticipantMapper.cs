@@ -10,6 +10,7 @@ public class ParticipantMapper
         entity.Email,
         entity.FirstName,
         entity.LastName,
-        entity.PhoneNumber
+        entity.PhoneNumber,
+        entity.RowVersion
     );
 }
