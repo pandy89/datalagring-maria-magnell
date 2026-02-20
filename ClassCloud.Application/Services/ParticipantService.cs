@@ -35,7 +35,7 @@ public class ParticipantService(IParticipantRepository participantRepository)
     public async Task<IReadOnlyList<ParticipantDto>> GetAllParticipantsAsync(CancellationToken ct = default)
     {
         return await _participantRepository.GetAllAsync(
-            select: p => new ParticipantDto(p.Email, p.FirstName, p.LastName, p.PhoneNumber),
+            select: p => new ParticipantDto(p.Email, p.FirstName, p.LastName, p.PhoneNumber, p.RowVersion),
             orderBy: o => o.OrderByDescending(x => x.Email),
             ct: ct
             );

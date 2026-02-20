@@ -4,6 +4,7 @@ public record ParticipantDto(
     string Email,
     string FirstName,
     string LastName,
-    string? PhoneNumber
+    string? PhoneNumber,
+    byte[] RowVersion
 );
 

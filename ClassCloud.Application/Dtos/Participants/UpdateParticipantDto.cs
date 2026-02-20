@@ -22,6 +22,7 @@ public record UpdateParticipantDto(
     [MaxLength(50)] 
     string PhoneNumber,
 
+    [Required]
     byte[] RowVersion
     );
 
