@@ -19,7 +19,7 @@ public class TeacherService(ITeacherRepository teacherRepository)
         if (exists)
             return Error.Conflict("Teacher.Conflict", $"Teacher with '{dto.Email}' already exists.");
 
-        var savedTeacher = await _teacherRepository.CreateAsync(new TeacherEntity { Email = dto.Email, FirstName = dto.FirstName, LastName = dto.LastName, Expertise = dto.Expertise }, ct);
+        var savedTeacher = await _teacherRepository.CreateAsync(new TeacherEntity { FirstName = dto.FirstName, LastName = dto.LastName, Expertise = dto.Expertise, Email = dto.Email }, ct);
         return TeacherMapper.ToTeacherDto(savedTeacher);
     }
 
@@ -36,8 +36,8 @@ public class TeacherService(ITeacherRepository teacherRepository)
     public async Task<IReadOnlyList<TeacherDto>> GetAllTeachersAsync(CancellationToken ct = default)
     {
         return await _teacherRepository.GetAllAsync(
-            select: t => new TeacherDto(t.Email, t.FirstName, t.LastName, t.Expertise , t.CreatedAtUtc, t.UpdatedAtUtc, t.IsDeleted, t.RowVersion ),
-            orderBy: o => o.OrderByDescending(x => x.Email),
+            select: t => new TeacherDto(t.Id, t.FirstName, t.LastName, t.Expertise, t.Email, t.CreatedAtUtc, t.UpdatedAtUtc, t.IsDeleted, t.RowVersion ),
+            orderBy: o => o.OrderBy(x => x.Email),
             ct: ct
             );
     }
@@ -51,11 +51,11 @@ public class TeacherService(ITeacherRepository teacherRepository)
 
         if (!teacher.RowVersion.SequenceEqual(dto.RowVersion))
             return Error.Conflict("Teacher.Conflict", "Updated by another user. Please try again.");
-
-        teacher.Email = dto.Email;
+        
         teacher.FirstName = dto.FirstName;
         teacher.LastName = dto.LastName;
         teacher.Expertise = dto.Expertise;
+        teacher.Email = dto.Email;
         teacher.UpdatedAtUtc = DateTime.UtcNow;
 
         await _teacherRepository.SaveChangesAsync(ct);

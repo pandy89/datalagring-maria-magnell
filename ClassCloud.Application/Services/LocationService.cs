@@ -35,7 +35,7 @@ public class LocationService(ILocationRepository locationRepository)
     public async Task<IReadOnlyList<LocationDto>> GetAllLocationsAsync(CancellationToken ct = default)
     {
         return await _locationRepository.GetAllAsync(
-            select: l => new LocationDto(l.Name, l.CreatedAtUtc, l.UpdatedAtUtc, l.RowVersion),
+            select: l => new LocationDto(l.Id, l.Name, l.CreatedAtUtc, l.UpdatedAtUtc, l.RowVersion),
             orderBy: o => o.OrderBy(x => x.Name),
             ct: ct
             );

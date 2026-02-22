@@ -3,6 +3,8 @@
 namespace ClassCloud.Application.Dtos.Participants;
 
 public record UpdateParticipantDto(
+    int Id,
+
     [Required]
     [MinLength(1)]
     [MaxLength(255)] 
