@@ -14,7 +14,7 @@ public class LocationService(ILocationRepository locationRepository)
     // Create location
     public async Task<ErrorOr<LocationDto>> CreateLocationAsync(CreateLocationDto dto, CancellationToken ct = default)
     {
-        var exists = await _locationRepository.ExistsAsync(x => x.Name == dto.Name);
+        var exists = await _locationRepository.ExistsAsync(x => x.Name == dto.Name, ct);
         if (exists)
             return Error.Conflict("Location.Conflict", $"Location with '{dto.Name}' already exists.");
 
