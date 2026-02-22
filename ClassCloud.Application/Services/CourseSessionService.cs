@@ -1,5 +1,6 @@
 ﻿using ClassCloud.Application.Abstractions.Persistence;
 using ClassCloud.Application.Common.Errors;
+using ClassCloud.Application.Common.Results;
 using ClassCloud.Application.Dtos.CourseSessions;
 using ClassCloud.Application.Mappers;
 using ClassCloud.Domain.Entities;
@@ -50,10 +51,14 @@ public class CourseSessionService(ICourseSessionRepository courseSessionReposito
 
         var savedCourseSession = await _courseSessionRepository.CreateAsync(entity, ct);
 
-        return CourseSessionMapper.ToCourseSessionDto(savedCourseSession);
-    }
+        var courseSession = await GetOneCourseSessionAsync(savedCourseSession.Id, ct);
+        if (courseSession == null)
+        {
+            return Error.NotFound("CourseSession.NotFound" ,"CourseSession not found.");
+        }
 
-    
+        return courseSession;
+    }    
 
     // Get one selected coursesession by Id.
     public async Task<ErrorOr<CourseSessionDto>> GetOneCourseSessionAsync(int id, CancellationToken ct = default)
@@ -67,5 +72,51 @@ public class CourseSessionService(ICourseSessionRepository courseSessionReposito
         return courseSession is null
             ? Error.NotFound("CourseSession.NotFound", $"CourseSession with '{id}' was not found.")
             : courseSession;
+    }
+
+    // Get all
+    public async Task<IReadOnlyList<CourseSessionDto>> GetAllCourseSessionsAsync(CancellationToken ct = default)
+    {
+        return await _courseSessionRepository.GetAllAsync(
+            select: CourseSessionMapper.ToCourseSessionDtoExpr,
+            ct: ct
+            );
+    }
+
+    // Update
+    public async Task<ErrorOr<CourseSessionDto>> UpdateCourseSessionAsync(int id, UpdateCourseSessionDto dto, CancellationToken ct = default)
+    {
+        var courseSession = await _courseSessionRepository.GetOneAsync(x => x.Id == id, ct);
+        if (courseSession is null)
+            return Error.NotFound("CourseSession.NotFound", $"CourseSession with '{id}' was not found.");
+
+        if (!courseSession.RowVersion.SequenceEqual(dto.RowVersion))
+            return Error.Conflict("CourseSession.Conflict", "Updated by another user. Try again.");
+
+        courseSession.StartDate = dto.StartDate;
+        courseSession.EndDate = dto.EndDate;
+        courseSession.MaxParticipants = dto.MaxParticipants;
+        courseSession.LocationId = dto.LocationId;
+
+        await _courseSessionRepository.SaveChangesAsync(ct);
+
+        var courseSessionDto = await GetOneCourseSessionAsync(courseSession.Id, ct);
+        if (courseSessionDto == null)
+        {
+            return Error.NotFound("CourseSession.NotFound", "CourseSession not found.");
+        }
+
+        return courseSessionDto;
+    }
+
+    // Delete
+    public async Task<ErrorOr<Deleted>> DeleteCourseSessionAsync(int id, CancellationToken ct = default)
+    {
+        var courseSession = await _courseSessionRepository.GetOneAsync(x => x.Id == id, ct);
+        if (courseSession is null)
+            return Error.NotFound("CourseSession.NotFound", $"CourseSession with '{id}' was not found.");
+
+        await _courseSessionRepository.DeleteAsync(courseSession, ct);
+        return Result.Deleted;
     }
 }

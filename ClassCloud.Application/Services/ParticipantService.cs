@@ -35,7 +35,7 @@ public class ParticipantService(IParticipantRepository participantRepository)
     public async Task<IReadOnlyList<ParticipantDto>> GetAllParticipantsAsync(CancellationToken ct = default)
     {
         return await _participantRepository.GetAllAsync(
-            select: p => new ParticipantDto(p.Email, p.FirstName, p.LastName, p.PhoneNumber, p.RowVersion),
+            select: p => new ParticipantDto(p.Id, p.Email, p.FirstName, p.LastName, p.PhoneNumber, p.RowVersion),
             orderBy: o => o.OrderByDescending(x => x.Email),
             ct: ct
             );
@@ -51,6 +51,7 @@ public class ParticipantService(IParticipantRepository participantRepository)
         if (!participant.RowVersion.SequenceEqual(dto.RowVersion))
             return Error.Conflict("Participant.Conflict", "Updated by another user. Please try again.");
 
+        participant.Id = dto.Id;
         participant.Email = dto.Email;
         participant.FirstName = dto.FirstName;
         participant.LastName = dto.LastName;

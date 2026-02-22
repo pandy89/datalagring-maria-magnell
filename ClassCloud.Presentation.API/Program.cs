@@ -1,9 +1,11 @@
 using ClassCloud.Application.Abstractions.Persistence;
+using ClassCloud.Application.Common.Results;
 using ClassCloud.Application.Dtos.Course;
+using ClassCloud.Application.Dtos.CourseSessions;
 using ClassCloud.Application.Dtos.Locations;
 using ClassCloud.Application.Dtos.Participants;
 using ClassCloud.Application.Dtos.Teachers;
-using ClassCloud.Application.Dtos.CourseSessions;
+using ClassCloud.Application.Dtos.CourseRegistrations;
 using ClassCloud.Application.Services;
 using ClassCloud.Infrastructure;
 using ClassCloud.Infrastructure.Persistence.Repositories;
@@ -23,6 +25,8 @@ builder.Services.AddScoped<CourseSessionService>();
 builder.Services.AddScoped<ParticipantService>();
 builder.Services.AddScoped<TeacherService>();
 builder.Services.AddScoped<LocationService>();
+builder.Services.AddScoped<CourseRegistrationService>();
+//builder.Services.AddScoped<CourseStatusService>();
 
 
 // Repos
@@ -31,6 +35,8 @@ builder.Services.AddScoped<ICourseSessionRepository, CourseSessionRepository>();
 builder.Services.AddScoped<IParticipantRepository, ParticipantRepository>();
 builder.Services.AddScoped<ITeacherRepository, TeacherRepository>();
 builder.Services.AddScoped<ILocationRepository, LocationRepository>();
+builder.Services.AddScoped<ICourseRegistrationRepository, CourseRegistrationRepository>();
+builder.Services.AddScoped<ICourseStatusRepository, CourseStatusRepository>();
 
 
 builder.Services.AddCors(options =>
@@ -81,7 +87,7 @@ app.UseCors("All");
 
 var courses = app.MapGroup("/api/courses").WithTags("Courses");
 
-// Create course
+// Create
 courses.MapPost("/", async (CreateCourseDto dto, CourseService courseService, CancellationToken ct) =>
 {
     var result = await courseService.CreateCourseAsync(dto, ct);
@@ -91,14 +97,14 @@ courses.MapPost("/", async (CreateCourseDto dto, CourseService courseService, Ca
     );
 });
 
-// Get all courses
+// Get all
 courses.MapGet("/", async (CourseService courseService, CancellationToken ct) =>
 {
     var result = await courseService.GetAllCoursesAsync(ct);
     return Results.Ok(result);
 });
 
-// Get one course
+// Get one
 courses.MapGet("/{courseCode}", async (string courseCode, CourseService courseService, CancellationToken ct) =>
 {
     var result = await courseService.GetOneCourseAsync(courseCode, ct);
@@ -108,7 +114,7 @@ courses.MapGet("/{courseCode}", async (string courseCode, CourseService courseSe
         );
 });
 
-// Update course
+// Update
 courses.MapPut("/{courseCode}", async (string courseCode, UpdateCourseDto dto, CourseService courseService, CancellationToken ct) =>
 {
     var result = await courseService.UpdateCourseAsync(courseCode, dto, ct);
@@ -118,7 +124,7 @@ courses.MapPut("/{courseCode}", async (string courseCode, UpdateCourseDto dto, C
         );
 });
 
-// Delete course
+// Delete
 courses.MapDelete("/{courseCode}", async (string courseCode, CourseService courseService, CancellationToken ct) =>
 {
     var result = await courseService.DeleteCourseAsync(courseCode, ct);
@@ -133,8 +139,7 @@ courses.MapDelete("/{courseCode}", async (string courseCode, CourseService cours
 
 var courseSessions = app.MapGroup("/api/course-sessions").WithTags("Course Sessions");
 
-// Create courseSession
-
+// Create
 courseSessions.MapPost("/", async (CreateCourseSessionDto dto, CourseSessionService courseSessionService, CancellationToken ct) =>
 {
     var result = await courseSessionService.CreateCourseSessionAsync(dto, ct);
@@ -144,14 +149,95 @@ courseSessions.MapPost("/", async (CreateCourseSessionDto dto, CourseSessionServ
     );
 });
 
-
+//Get one 
 courseSessions.MapGet("/{id}", async (int id, CourseSessionService service, CancellationToken ct) =>
 {
     var result = await service.GetOneCourseSessionAsync(id, ct);
     return result.Match(
-        cs => Results.Ok(cs),
+        coursesession => Results.Ok(coursesession),
         errors => errors.ToProblemDetails()
     );
+});
+
+// Get all
+courseSessions.MapGet("/", async (CourseSessionService coursesessionservice, CancellationToken ct) => 
+{
+    var result = await coursesessionservice.GetAllCourseSessionsAsync(ct);
+    return Results.Ok(result);
+});
+
+// Update
+courseSessions.MapPut("/{id}", async(int id, UpdateCourseSessionDto dto, CourseSessionService courseSessionService, CancellationToken ct) =>
+{ 
+    var result = await courseSessionService.UpdateCourseSessionAsync(id, dto, ct);
+    return result.Match(
+        coursesession => Results.Ok(coursesession),
+        errors => errors.ToProblemDetails()
+        );
+});
+
+// Delete
+courseSessions.MapDelete("/{id}", async (int id, CourseSessionService courseSessionService, CancellationToken ct) =>
+{
+    var result = await courseSessionService.DeleteCourseSessionAsync(id, ct);
+    return result.Match(
+        _ => Results.NoContent(),
+        errors => errors.ToProblemDetails()
+        );
+});
+
+
+#endregion
+
+#region CourseRegistrations
+var courseRegistrations = app.MapGroup("/api/course-Registrations").WithTags("Course Registrations");
+
+// Create
+
+courseRegistrations.MapPost("/", async (CreateCourseRegistrationDto dto, CourseRegistrationService courseRegistrationService, CancellationToken ct) =>
+{
+    var result = await courseRegistrationService.CreateCourseRegistrationAsync(dto, ct);
+    return result.Match(
+        courseregistration => Results.Created($"/api/courseregistration/{courseregistration.Id}", courseregistration),
+        errors => errors.ToProblemDetails()
+    );
+});
+
+// Get one
+courseRegistrations.MapGet("/{id}", async (int id, CourseRegistrationService courseRegistrationservice, CancellationToken ct) =>
+{
+    var result = await courseRegistrationservice.GetOneCourseRegistrationAsync(id, ct);
+    return result.Match(
+        courseregistration => Results.Ok(courseregistration),
+        errors => errors.ToProblemDetails()
+    );
+});
+
+// Get all
+courseRegistrations.MapGet("/", async (CourseRegistrationService courseRegistrationService, CancellationToken ct) =>
+{
+    var result = await courseRegistrationService.GetAllCourseRegistrationsAsync(ct);
+    return Results.Ok(result);
+});
+
+//Update 
+courseRegistrations.MapPut("/{id}", async (int id, UpdateCourseRegistrationDto dto, CourseRegistrationService courseRegistrationService, CancellationToken ct) =>
+{
+    var result = await courseRegistrationService.UpdateCourseRegistrationAsync(id, dto, ct);
+    return result.Match(
+        courseregistration => Results.Ok(courseregistration),
+        errors => errors.ToProblemDetails()
+        );
+});
+
+// Delete
+courseRegistrations.MapDelete("/{id}", async (int id, CourseRegistrationService courseRegistrationService, CancellationToken ct) =>
+{
+    var result = await courseRegistrationService.DeleteCourseRegistrationAsync(id, ct);
+    return result.Match(
+        _ => Results.NoContent(),
+        errors => errors.ToProblemDetails()
+        );
 });
 
 
@@ -160,7 +246,7 @@ courseSessions.MapGet("/{id}", async (int id, CourseSessionService service, Canc
 #region Participants
 var participant = app.MapGroup("/api/participant").WithTags("Participant");
 
-// Create participant
+// Create
 participant.MapPost("/", async (CreateParticipantDto dto, ParticipantService participantService, CancellationToken ct) =>
 {
     var result = await participantService.CreateParticipantAsync(dto, ct);
@@ -170,7 +256,7 @@ participant.MapPost("/", async (CreateParticipantDto dto, ParticipantService par
     );
 });
 
-// Get one participant
+// Get one
 participant.MapGet("/{email}", async (string Email, ParticipantService participantService, CancellationToken ct) =>
 {
     var result = await participantService.GetOneParticipantAsync(Email, ct);
@@ -187,7 +273,7 @@ participant.MapGet("/", async (ParticipantService participantService, Cancellati
     return Results.Ok(result);
 });
 
-// Update participant
+// Update
 participant.MapPut("/{email}", async (string Email, UpdateParticipantDto dto, ParticipantService participantService, CancellationToken ct) =>
 {
     var result = await participantService.UpdateParticipantAsync(Email, dto, ct);
@@ -212,7 +298,7 @@ participant.MapDelete("/{email}", async (string Email, ParticipantService partic
 #region Teachers
 var teacher = app.MapGroup("/api/teacher").WithTags("Teacher");
 
-// Create teacher
+// Create
 teacher.MapPost("/", async (CreateTeacherDto dto, TeacherService teacherService, CancellationToken ct) =>
 {
     var result = await teacherService.CreateTeacherAsync(dto, ct);
@@ -239,7 +325,7 @@ teacher.MapGet("/", async (TeacherService teacherService, CancellationToken ct) 
     return Results.Ok(result);
 });
 
-// Update teacher
+// Update
 teacher.MapPut("/{email}", async (string email, UpdateTeacherDto dto, TeacherService teacherService, CancellationToken ct) =>
 {
     var result = await teacherService.UpdateTeacherAsync(email, dto, ct);
@@ -262,9 +348,9 @@ teacher.MapDelete("/{email}", async (string Email, TeacherService teacherService
 #endregion
 
 #region Location
-var locations = app.MapGroup("/api/location").WithTags("Locations");
+var locations = app.MapGroup("/api/location").WithTags("Location");
 
-// Create location
+// Create
 locations.MapPost("/", async (CreateLocationDto dto, LocationService locationService, CancellationToken ct) =>
 {
     var result = await locationService.CreateLocationAsync(dto, ct);
@@ -274,7 +360,7 @@ locations.MapPost("/", async (CreateLocationDto dto, LocationService locationSer
     );
 });
 
-// Get one location
+// Get one
 locations.MapGet("/{name}", async (string name, LocationService locationService, CancellationToken ct) =>
 {
     var result = await locationService.GetOneLocationAsync(name, ct);
@@ -291,7 +377,7 @@ locations.MapGet("/", async (LocationService locationService, CancellationToken 
     return Results.Ok(result);
 });
 
-// Update location
+// Update
 locations.MapPut("/{name}", async (string name, UpdateLocationDto dto, LocationService locationService, CancellationToken ct) =>
 {
     var result = await locationService.UpdateLocationAsync(name, dto, ct);
@@ -301,7 +387,7 @@ locations.MapPut("/{name}", async (string name, UpdateLocationDto dto, LocationS
         );
 });
 
-// Delete location with name
+// Delete
 locations.MapDelete("/{name}", async (string name, LocationService locationService, CancellationToken ct) =>
 {
     var result = await locationService.DeleteLocationAsync(name, ct);
@@ -310,12 +396,6 @@ locations.MapDelete("/{name}", async (string name, LocationService locationServi
         errors => errors.ToProblemDetails()
     );
 });
-
-
-
-
-
-
 #endregion
 
 app.Run();

@@ -5,6 +5,7 @@ namespace ClassCloud.Application.Dtos.CourseSessions;
 
 public sealed record CourseSessionDto
 (
+    int Id,
     DateTime StartDate,
     DateTime EndDate,
     int MaxParticipants,

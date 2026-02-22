@@ -7,6 +7,7 @@ public class TeacherMapper
 {
     public static TeacherDto ToTeacherDto(TeacherEntity entity) => new
     (
+        entity.Id,
         entity.FirstName,
         entity.LastName,
         entity.Expertise,

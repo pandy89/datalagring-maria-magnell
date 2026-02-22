@@ -10,6 +10,7 @@ public class CourseSessionMapper
 {
     public static Expression<Func<CourseSessionEntity, CourseSessionDto>> ToCourseSessionDtoExpr =>
         cs => new CourseSessionDto(
+            cs.Id,
             cs.StartDate,
             cs.EndDate,
             cs.MaxParticipants,
@@ -29,6 +30,7 @@ public class CourseSessionMapper
                 cs.Course.RowVersion
             ),
             new LocationDto(
+                cs.Location.Id,
                 cs.Location.Name,
                 cs.Location.CreatedAtUtc,
                 cs.Location.UpdatedAtUtc,
@@ -39,6 +41,7 @@ public class CourseSessionMapper
 
     public static CourseSessionDto ToCourseSessionDto(CourseSessionEntity entity) => new
     (
+        entity.Id,
         entity.StartDate,
         entity.EndDate,
         entity.MaxParticipants,
@@ -58,6 +61,7 @@ public class CourseSessionMapper
             entity.Course.RowVersion
         ),
         new LocationDto(
+            entity.Location.Id,
             entity.Location.Name,
             entity.Location.CreatedAtUtc,
             entity.Location.UpdatedAtUtc,

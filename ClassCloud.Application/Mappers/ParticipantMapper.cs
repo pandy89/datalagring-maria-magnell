@@ -7,6 +7,7 @@ public class ParticipantMapper
 {
     public static ParticipantDto ToParticipantDto(ParticipantEntity entity) => new
     (
+        entity.Id,
         entity.Email,
         entity.FirstName,
         entity.LastName,
