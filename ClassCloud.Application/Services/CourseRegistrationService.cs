@@ -2,8 +2,6 @@
 using ClassCloud.Application.Common.Errors;
 using ClassCloud.Application.Common.Results;
 using ClassCloud.Application.Dtos.CourseRegistrations;
-using ClassCloud.Application.Dtos.CourseSessions;
-using ClassCloud.Application.Dtos.Participants;
 using ClassCloud.Application.Mappers;
 using ClassCloud.Domain.Entities;
 

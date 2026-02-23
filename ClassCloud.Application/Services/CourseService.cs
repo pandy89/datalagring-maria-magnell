@@ -14,7 +14,7 @@ public class CourseService(ICourseRepository courseRepository)
     // Create
     public async Task<ErrorOr<CourseDto>> CreateCourseAsync(CreateCourseDto dto, CancellationToken ct = default)
     {
-        var exisits = await _courseRepository.ExistsAsync(x => x.CourseCode == dto.CourseCode);
+        var exisits = await _courseRepository.ExistsAsync(x => x.CourseCode == dto.CourseCode, ct);
         if (exisits)
             return Error.Conflict("Course.Conflict", $"Course witch '{dto.CourseCode}' already exsits");
         
