@@ -5,8 +5,9 @@ using ClassCloud.Application.Dtos.CourseSessions;
 using ClassCloud.Application.Mappers;
 using ClassCloud.Domain.Entities;
 
-
 namespace ClassCloud.Application.Services;
+
+// CourseSessionService; I have used ChatGpt to set up the structure for create. I have also received help from a former colleague from Consid who works with development. 
 
 public class CourseSessionService(ICourseSessionRepository courseSessionRepository, ICourseRepository courseRepository, ILocationRepository locationRepository)
 {
