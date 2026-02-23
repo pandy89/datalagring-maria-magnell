@@ -9,6 +9,8 @@ using ClassCloud.Domain.Entities;
 
 namespace ClassCloud.Application.Services;
 
+// CourseRegistration; I have looked at what CourseSession looks like and I have taken help from ChatGpt to set up the structure for create. I have also received help from a former colleague from Consid who works with development.
+
 public class CourseRegistrationService(ICourseRegistrationRepository courseRegistrationRepository, ICourseSessionRepository courseSessionRepository, ICourseStatusRepository courseStatusRepository, IParticipantRepository participantRepository)
 {
     private readonly ICourseRegistrationRepository _courseRegistrationRepository = courseRegistrationRepository;
