@@ -355,15 +355,15 @@ locations.MapPost("/", async (CreateLocationDto dto, LocationService locationSer
 {
     var result = await locationService.CreateLocationAsync(dto, ct);
     return result.Match(
-        location => Results.Created($"/api/location/{location.Name}", location),
+        location => Results.Created($"/api/location/{location.Id}", location), 
         errors => errors.ToProblemDetails()
     );
 });
 
 // Get one
-locations.MapGet("/{name}", async (string name, LocationService locationService, CancellationToken ct) =>
+locations.MapGet("/{id}", async (int id, LocationService locationService, CancellationToken ct) =>
 {
-    var result = await locationService.GetOneLocationAsync(name, ct);
+    var result = await locationService.GetOneLocationAsync(id, ct);
     return result.Match(
         location => Results.Ok(location),
         errors => errors.ToProblemDetails()
@@ -378,9 +378,9 @@ locations.MapGet("/", async (LocationService locationService, CancellationToken 
 });
 
 // Update
-locations.MapPut("/{name}", async (string name, UpdateLocationDto dto, LocationService locationService, CancellationToken ct) =>
+locations.MapPut("/{id}", async (int id, UpdateLocationDto dto, LocationService locationService, CancellationToken ct) =>
 {
-    var result = await locationService.UpdateLocationAsync(name, dto, ct);
+    var result = await locationService.UpdateLocationAsync(id, dto, ct);
     return result.Match(
         location => Results.Ok(location),
         errors => errors.ToProblemDetails()
@@ -388,9 +388,9 @@ locations.MapPut("/{name}", async (string name, UpdateLocationDto dto, LocationS
 });
 
 // Delete
-locations.MapDelete("/{name}", async (string name, LocationService locationService, CancellationToken ct) =>
+locations.MapDelete("/{id}", async (int id, LocationService locationService, CancellationToken ct) =>
 {
-    var result = await locationService.DeleteLocationAsync(name, ct);
+    var result = await locationService.DeleteLocationAsync(id, ct);
     return result.Match(
         _ => Results.NoContent(),
         errors => errors.ToProblemDetails()

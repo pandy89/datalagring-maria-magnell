@@ -19,16 +19,20 @@ public class LocationService(ILocationRepository locationRepository)
             return Error.Conflict("Location.Conflict", $"Location with '{dto.Name}' already exists.");
 
         var savedLocation = await _locationRepository.CreateAsync(new LocationEntity { Name = dto.Name }, ct);
-        return LocationMapper.ToLocationDto(savedLocation);
+
+
+        var location = new LocationDto(savedLocation.Id, savedLocation.Name, savedLocation.CreatedAtUtc, savedLocation.UpdatedAtUtc, savedLocation.RowVersion);
+        return location;
+        //return LocationMapper.ToLocationDto(savedLocation);
     }
 
     // Get one location
-    public async Task<ErrorOr<LocationDto>> GetOneLocationAsync(string Name, CancellationToken ct = default)
+    public async Task<ErrorOr<LocationDto>> GetOneLocationAsync(int id, CancellationToken ct = default)
     {
-        var location = await _locationRepository.GetOneAsync(x => x.Name == Name, ct);
+        var location = await _locationRepository.GetOneAsync(x => x.Id == id, ct);
         return location is not null
             ? LocationMapper.ToLocationDto(location)
-            : Error.NotFound("Location.NotFound", $"Location with '{Name}' was not found.");
+            : Error.NotFound("Location.NotFound", $"Location with '{id}' was not found.");
     }
 
     // Get all location
@@ -42,11 +46,11 @@ public class LocationService(ILocationRepository locationRepository)
     }
 
     // Update location
-    public async Task<ErrorOr<LocationDto>> UpdateLocationAsync(string Name, UpdateLocationDto dto, CancellationToken ct = default)
+    public async Task<ErrorOr<LocationDto>> UpdateLocationAsync(int id, UpdateLocationDto dto, CancellationToken ct = default)
     {
-        var location = await _locationRepository.GetOneAsync(x => x.Name == Name, ct);
+        var location = await _locationRepository.GetOneAsync(x => x.Id == id, ct);
         if (location is null)
-            return Error.NotFound("Location.NotFound", $"Location with '{Name}' was not found.");
+            return Error.NotFound("Location.NotFound", $"Location with '{id}' was not found.");
 
         if (!location.RowVersion.SequenceEqual(dto.RowVersion))
             return Error.Conflict("Location.Conflict", "Updated by another user. Please try again.");
@@ -60,11 +64,11 @@ public class LocationService(ILocationRepository locationRepository)
     }
 
     // Delete location
-    public async Task<ErrorOr<Deleted>> DeleteLocationAsync(string Name, CancellationToken ct = default)
+    public async Task<ErrorOr<Deleted>> DeleteLocationAsync(int id, CancellationToken ct = default)
     {
-        var location = await _locationRepository.GetOneAsync(x => x.Name == Name, ct);
+        var location = await _locationRepository.GetOneAsync(x => x.Id == id, ct);
         if (location is null)
-            return Error.NotFound("Location.NotFound", $"Location with '{Name}' was not found.");
+            return Error.NotFound("Location.NotFound", $"Location with '{id}' was not found.");
 
         await _locationRepository.DeleteAsync(location, ct);
         return Result.Deleted;
