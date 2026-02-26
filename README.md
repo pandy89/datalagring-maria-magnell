@@ -1,4 +1,4 @@
-# ClassClaud
+# ClassCloud
 -- This is a schoolassignment --
 
 In this assignment, I will develop a system that manages data storage for an educational company. 
